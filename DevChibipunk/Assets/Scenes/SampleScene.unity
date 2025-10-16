@@ -179,7 +179,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -205,8 +205,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.09167447, y: -0.011329323, z: 0.0010433123, w: -0.9957241}
-  m_LocalPosition: {x: -0.99258626, y: 2.766089, z: -5.9892926}
+  m_LocalRotation: {x: 0.19419758, y: -0.16510777, z: 0.033176813, w: 0.9663985}
+  m_LocalPosition: {x: 0.93862295, y: 2.3931093, z: -3.0339808}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -433,6 +433,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Suelo
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: ab8ecba3b9c380947aafb59c91dcd953, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ab8ecba3b9c380947aafb59c91dcd953, type: 3}
       propertyPath: m_Name
       value: MEDELLIN
@@ -499,7 +503,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -645,6 +649,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1452592587}
+  - component: {fileID: 1452592589}
+  - component: {fileID: 1452592588}
   m_Layer: 0
   m_Name: Jugador
   m_TagString: Untagged
@@ -661,14 +667,59 @@ Transform:
   m_GameObject: {fileID: 1452592586}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.9918419, z: -0, w: 0.1274737}
-  m_LocalPosition: {x: 2.692, y: 5.115, z: -1.59}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 93.31, y: 5.13, z: -25.3}
+  m_LocalScale: {x: 2.6352, y: 2.6352, z: 2.6352}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
   - {fileID: 860145887}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -165.353, z: 0}
+--- !u!54 &1452592588
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452592586}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1452592589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452592586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14debd9c1180c4843aa118eb3173627d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20
+  jumpForce: 5
+  groundCheckDistance: 0.2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1538785488
 GameObject:
   m_ObjectHideFlags: 0
