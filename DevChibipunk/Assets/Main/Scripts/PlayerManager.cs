@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Configuración de movimiento")]
+    [Header("Configuraciï¿½n de movimiento")]
     public float speed = 5f;             // Velocidad de movimiento
     public float jumpForce = 5f;         // Fuerza del salto
     public float groundCheckDistance = 0.2f; // Distancia para detectar el suelo
@@ -28,14 +28,14 @@ public class PlayerMovement : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");   // W y S
 
         Vector3 movimiento = new Vector3(moveX, 0, moveZ) * speed;
-        Vector3 nuevaVelocidad = new Vector3(movimiento.x, rb.velocity.y, movimiento.z);
+        Vector3 nuevaVelocidad = new Vector3(movimiento.x, rb.linearVelocity.y, movimiento.z);
 
-        rb.velocity = transform.TransformDirection(nuevaVelocidad);
+        rb.linearVelocity = transform.TransformDirection(nuevaVelocidad);
     }
 
     void Saltar()
     {
-        // Detecta si está en el suelo
+        // Detecta si estï¿½ en el suelo
         isGrounded = Physics.CheckSphere(transform.position + Vector3.down * 0.5f, groundCheckDistance, groundMask);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Dibuja la esfera de detección de suelo (visible solo en modo editor)
+        // Dibuja la esfera de detecciï¿½n de suelo (visible solo en modo editor)
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position + Vector3.down * 0.5f, groundCheckDistance);
     }
