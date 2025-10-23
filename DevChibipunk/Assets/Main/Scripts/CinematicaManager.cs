@@ -1,146 +1,99 @@
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
-public class IntroCinematic : MonoBehaviour
+public class CameraPathWithFade : MonoBehaviour
 {
-    [Header("Cámara y recorrido")]
+    [Header("Configuración de la cámara")]
     public Transform mainCamera;
     public Transform[] camPoints;
     public float moveSpeed = 2f;
-    public float waitTime = 3f;
+    public float waitTime = 2f;
 
-    [Header("Narrativa")]
-    [TextArea(3, 5)]
-    public string[] storyLines;           // Líneas del texto narrativo
-    public TMP_Text narrativeText;        // Texto principal
-    public CanvasGroup fadeCanvas;        // Imagen negra para fade
-    public TMP_Text continueText;         // Texto "Presiona ENTER"
+    [Header("Efecto de fade")]
+    public CanvasGroup fadeCanvas;
 
-    [Header("Audio opcional")]
-    public AudioSource backgroundMusic;
+    [Header("Mensaje final")]
+    public GameObject continueMessage;   // Texto "Presiona ENTER para continuar"
 
-    [Header("Escena siguiente")]
-    public string nextSceneName = "Nivel1"; // Nombre de la escena a cargar
+    [Header("Cambio de escena")]
+    public SceneChangeManager sceneManager;
+    public string nextSceneName = "Level1";
 
-    private bool playing = false;
-    private bool cinematicFinished = false;
+    private bool canContinue = false; // Indica si ya puede continuar
 
     void Start()
     {
         if (mainCamera == null)
             mainCamera = Camera.main.transform;
 
-        if (continueText != null)
-            continueText.gameObject.SetActive(false);
+        if (fadeCanvas != null)
+        {
+            fadeCanvas.alpha = 0;
+            fadeCanvas.gameObject.SetActive(false);
+        }
 
-        StartCoroutine(PlayCinematic());
+        if (continueMessage != null)
+            continueMessage.SetActive(false);
+
+        StartCoroutine(MoveCameraSequence());
     }
 
     void Update()
     {
-        // Esperar al jugador al final
-        if (cinematicFinished && Input.GetKeyDown(KeyCode.Return))
+        // Espera que el jugador presione Enter cuando ya pueda continuar
+        if (canContinue && Input.GetKeyDown(KeyCode.Return))
         {
-            StartCoroutine(LoadNextScene());
+            sceneManager.LoadScene(nextSceneName);
         }
     }
 
-    IEnumerator PlayCinematic()
+    IEnumerator MoveCameraSequence()
     {
-        playing = true;
-
-        yield return StartCoroutine(FadeIn());
-
-        if (backgroundMusic != null)
-            backgroundMusic.Play();
-
+        // Movimiento de cámara por los puntos
         for (int i = 0; i < camPoints.Length; i++)
         {
-            yield return StartCoroutine(MoveCameraTo(camPoints[i]));
+            Transform target = camPoints[i];
 
-            if (i < storyLines.Length)
-                yield return StartCoroutine(ShowNarrative(storyLines[i]));
+            while (Vector3.Distance(mainCamera.position, target.position) > 0.05f)
+            {
+                mainCamera.position = Vector3.Lerp(mainCamera.position, target.position, Time.deltaTime * moveSpeed);
+                mainCamera.rotation = Quaternion.Slerp(mainCamera.rotation, target.rotation, Time.deltaTime * moveSpeed);
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(waitTime);
         }
 
-        yield return StartCoroutine(FadeOut());
-        yield return new WaitForSeconds(1f);
-
-        cinematicFinished = true;
-        if (continueText != null)
+        // Fade out al terminar
+        if (fadeCanvas != null)
         {
-            continueText.gameObject.SetActive(true);
-            StartCoroutine(BlinkContinueText());
-        }
-    }
-
-    IEnumerator MoveCameraTo(Transform target)
-    {
-        while (Vector3.Distance(mainCamera.position, target.position) > 0.05f)
-        {
-            mainCamera.position = Vector3.Lerp(mainCamera.position, target.position, Time.deltaTime * moveSpeed);
-            mainCamera.rotation = Quaternion.Slerp(mainCamera.rotation, target.rotation, Time.deltaTime * moveSpeed);
-            yield return null;
-        }
-    }
-
-    IEnumerator ShowNarrative(string text)
-    {
-        narrativeText.text = "";
-        narrativeText.alpha = 1;
-
-        foreach (char c in text)
-        {
-            narrativeText.text += c;
-            yield return new WaitForSeconds(0.03f);
+            fadeCanvas.gameObject.SetActive(true);
+            yield return StartCoroutine(FadeOut());
         }
 
-        yield return new WaitForSeconds(waitTime);
+        // Mostrar el mensaje al jugador
+        if (continueMessage != null)
+            continueMessage.SetActive(true);
 
-        // Desvanecer texto
-        for (float t = 1f; t >= 0; t -= Time.deltaTime)
-        {
-            narrativeText.alpha = t;
-            yield return null;
-        }
-    }
-
-    IEnumerator FadeIn()
-    {
-        fadeCanvas.alpha = 1;
-        while (fadeCanvas.alpha > 0)
-        {
-            fadeCanvas.alpha -= Time.deltaTime;
-            yield return null;
-        }
+        // Activar la posibilidad de continuar
+        canContinue = true;
     }
 
     IEnumerator FadeOut()
     {
+        fadeCanvas.alpha = 0;
+
         while (fadeCanvas.alpha < 1)
         {
             fadeCanvas.alpha += Time.deltaTime;
             yield return null;
         }
     }
-
-    IEnumerator BlinkContinueText()
-    {
-        while (cinematicFinished)
-        {
-            continueText.alpha = Mathf.PingPong(Time.time * 1.5f, 1);
-            yield return null;
-        }
-    }
-
-    IEnumerator LoadNextScene()
-    {
-        // Pequeño fade antes de cambiar
-        yield return StartCoroutine(FadeOut());
-        SceneManager.LoadScene(nextSceneName);
-    }
 }
+
+
+
+
 
 
