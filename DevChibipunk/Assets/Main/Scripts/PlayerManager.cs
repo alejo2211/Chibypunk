@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Configuraci�n de movimiento")]
@@ -10,10 +11,13 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
-
+    private Animator animator;
+    private CharacterController controller;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        controller = GetComponent<CharacterController>();
     }
 
     void Update()
